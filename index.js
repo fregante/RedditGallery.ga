@@ -9,7 +9,7 @@ function init () {
 	
 	document.querySelector('form').addEventListener('submit', e => {
 		const url = document.querySelector('[name=url]').value;
-		if(!handleUrl()) {
+		if(!handleUrl(url)) {
 			alert('The post ID was not recognized: ' + url)
 		}
 		e.preventDefault();
