@@ -1,14 +1,31 @@
 const urlRegex = /(https?|ftp):\/\/[^\s/$.?#].[^\s\])]*/i;
 
-document.querySelector('form').addEventListener('submit', e => {
-	const url = document.querySelector('[name=url]').value;
+
+function init () {
+	const deepLink = new URL(location).searchParams.get('url');	
+	if(deepLink) {
+		handleUrl(deepLink);
+	}
+	
+	document.querySelector('form').addEventListener('submit', e => {
+		const url = document.querySelector('[name=url]').value;
+		if(!handleUrl()) {
+			alert('The post ID was not recognized: ' + url)
+		}
+		e.preventDefault();
+	});
+}
+function handleUrl(url) {
 	const [, id1, id2] = url.match(/comments\/(\w+)|^(\w+)$/) || []
 	const id = id1 || id2;
 	if (id) {
-		fetchPost(id).then(populate);
+		[...document.querySelectorAll('img')].forEach(img => img.remove());
+		return fetchPost(id).then(populate);
+		
+	} else {
+		return false;
 	}
-	e.preventDefault();
-});
+}
 
 function flatten(arr) {
   return arr.reduce(function (flat, toFlatten) {
