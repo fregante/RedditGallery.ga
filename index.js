@@ -28,7 +28,7 @@ function fetchAlbum(url) {
 	.then(r => r.data.map(i => i.link));
 }
 function fetchPost(id) {
-	fetch(`https://www.reddit.com/comments/${id}.json`, {
+	return fetch(`https://www.reddit.com/comments/${id}.json`, {
 		mode: 'cors'
 	})
 	.then(r => r.json())
