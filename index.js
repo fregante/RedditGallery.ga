@@ -73,3 +73,6 @@ function populate(urls) {
 		document.body.appendChild(img);
 	});
 }
+
+
+init();
