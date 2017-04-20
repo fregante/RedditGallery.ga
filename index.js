@@ -74,10 +74,11 @@ function fetchPost(id) {
 	)
 }
 function populate(urls) {
+	const content = document.querySelector('.content');
 	urls.forEach(url => {
 		const img = new Image();
 		img.src = url;
-		document.body.appendChild(img);
+		content.appendChild(img);
 	});
 }
 
