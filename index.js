@@ -1,7 +1,7 @@
 const urlRegex = /(https?|ftp):\/\/[^\s/$.?#].[^\s\])]*/i;
 
 document.querySelector('form').addEventListener('submit', e => {
-	const url = document.querySelector('[name=url').value;
+	const url = document.querySelector('[name=url]').value;
 	const [, id1, id2] = url.match(/comments\/(\w+)|^(\w+)$/) || []
 	const id = id1 || id2;
 	if (id) {
@@ -28,7 +28,9 @@ function fetchAlbum(url) {
 	.then(r => r.data.map(i => i.link));
 }
 function fetchPost(id) {
-	fetch(`https://www.reddit.com/comments/${id}.json`)
+	fetch(`https://www.reddit.com/comments/${id}.json`, {
+		mode: 'cors'
+	})
 	.then(r => r.json())
 	.then(r => 
 		r[1].data.children
