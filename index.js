@@ -23,7 +23,7 @@ function handleUrl(url) {
 	const id = id1 || id2;
 	if (id) {
 		[...document.querySelectorAll('img')].forEach(img => img.remove());
-		updateTitle(`Loading post ${id}`);
+		updateTitle(`Loading post ${id}...`);
 		return fetchPost(id).then(populate).then(
 			() => updateTitle(`Showing images for post ${id}`),
 			() => updateTitle(`Loading of post ${id} failed`)
