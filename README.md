@@ -4,7 +4,7 @@ RES makes it easy to show all images in comments, but I hate it that I cannot sh
 
 This micro web app will let you share a URL most of the images in the comments.
 
-Shareable URL example: http://redditpost.ga/?url=669c9k
+Shareable URL example: https://redditpost.ga/?url=669c9k
 
 Try with: https://www.reddit.com/r/photoshopbattles/comments/669c9k/psbattle_this_cat_longing_for_attention/
 
@@ -12,6 +12,5 @@ PRs welcome!
 
 ### Notes
 
-* HTTPS coming soon
 * No tracking nor ads
 * Requires modern browsers
