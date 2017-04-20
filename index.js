@@ -24,6 +24,7 @@ function handleUrl(url) {
 	if (id) {
 		[...document.querySelectorAll('img')].forEach(img => img.remove());
 		updateTitle(`Loading post ${id}...`);
+		history.replaceState(history.state, document.title, `/?url=${id}`);
 		return fetchPost(id).then(populate).then(
 			() => updateTitle(`Showing images for post ${id}`),
 			() => updateTitle(`Loading of post ${id} failed`)
