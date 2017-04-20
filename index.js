@@ -15,12 +15,19 @@ function init () {
 		e.preventDefault();
 	});
 }
+function updateTitle(title) {
+	document.querySelector('h1').textContent = title;
+}
 function handleUrl(url) {
 	const [, id1, id2] = url.match(/comments\/(\w+)|^(\w+)$/) || []
 	const id = id1 || id2;
 	if (id) {
 		[...document.querySelectorAll('img')].forEach(img => img.remove());
-		return fetchPost(id).then(populate);
+		updateTitle(`Loading post ${id}`);
+		return fetchPost(id).then(populate).then(
+			() => updateTitle(`Showing images for post ${id}`),
+			() => updateTitle(`Loading of post ${id} failed`),
+		);
 		
 	} else {
 		return false;
