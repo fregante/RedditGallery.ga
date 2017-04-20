@@ -6,11 +6,14 @@
 <style>
 	body {
 		text-align: center;
-		font-size: 18px;
 		font-family: sans-serif;
+	}
+	h1 {
+		font-size: 20px;
 	}
 	input {
 		font: inherit;
+		font-size: 18px;
 	}
 	img {
 		max-width: 100%;
@@ -18,13 +21,10 @@
 		display: block;
 		margin: 10px auto;
 	}
-	.small {
-		font-size: 0.8em;
-		color: #333;
-	}
 </style>
+<h1>One-thread Gallery for Reddit</h1>
+<div class="content"></div>
 <form action="." method="get">
-	<p>One-thread Gallery for Reddit</p>
 	<input type="text" name="url" autocomplete="off" placeholder="Paste a Reddit post URL">
 </form>
 <script src="index.js"></script>
