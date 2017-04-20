@@ -26,7 +26,7 @@ function handleUrl(url) {
 		updateTitle(`Loading post ${id}`);
 		return fetchPost(id).then(populate).then(
 			() => updateTitle(`Showing images for post ${id}`),
-			() => updateTitle(`Loading of post ${id} failed`),
+			() => updateTitle(`Loading of post ${id} failed`)
 		);
 		
 	} else {
