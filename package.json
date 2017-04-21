@@ -24,8 +24,8 @@
   },
   "scripts": {
     "test": "npm run build",
-    "build": "rollup -c | babili > dist/index.js",
-    "watch": "rollup -c -w -o dist/index.js"
+    "build": "rollup -c | babili > dist.js",
+    "watch": "rollup -c -w -o dist.js"
   },
   "repository": {
     "type": "git",
