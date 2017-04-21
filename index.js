@@ -133,7 +133,10 @@ function populate(comments) {
 		comment.images.forEach(url => {
 			const img = new Image();
 			img.src = url;
-			content.appendChild(img);
+			const a = document.createElement('a');
+			a.href = comment.comment;
+			a.appendChild(img);
+			content.appendChild(a);
 		});
 	});
 }
