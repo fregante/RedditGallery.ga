@@ -131,11 +131,12 @@ function populate(comments) {
 	const content = document.querySelector('.content');
 	comments.forEach(comment => {
 		comment.images.forEach(url => {
-			const img = new Image();
-			img.src = url;
+			const media = document.createElement(/\.gifv$/.test(url) ? 'video' : 'img');
+			media.src = url.replace(/\.gifv$/, '.mp4');
+			media.autoplay = true;
 			const a = document.createElement('a');
 			a.href = comment.comment;
-			a.appendChild(img);
+			a.appendChild(media);
 			content.appendChild(a);
 		});
 	});
