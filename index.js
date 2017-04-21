@@ -41,7 +41,7 @@ function handleUrl(url) {
 	const [, id1, id2] = url.match(/comments\/(\w+)|^(\w+)$/) || [];
 	const id = id1 || id2;
 	if (id) {
-		[...document.querySelectorAll('img')].forEach(img => img.remove());
+		[...document.querySelectorAll('img,video')].forEach(el => el.remove());
 		updateTitle(`Loading post ${id}...`);
 		history.replaceState(history.state, document.title, `/?url=${id}`);
 		return fetchPost(id).then(populate).then(
