@@ -6,7 +6,7 @@
 	{{#each media as item}}
 		<a href="{{item.comment}}" target="_blank">
 			{{#if item.isVideo}}
-				<video src="{{item.media}}" autoplay></video>
+				<video src="{{item.media}}" autoplay controls loop muted></video>
 			{{else}}
 				<img src="{{item.media}}" alt="">
 			{{/if}}
