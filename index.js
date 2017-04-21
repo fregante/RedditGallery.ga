@@ -130,7 +130,7 @@ function populate(comments) {
 	console.info(comments)
 	const content = document.querySelector('.content');
 	comments.forEach(comment => {
-		comment.images.forEach(url => {
+		new Set(comment.images).forEach(url => {
 			const media = document.createElement(/\.gifv$/.test(url) ? 'video' : 'img');
 			media.src = url.replace(/\.gifv$/, '.mp4');
 			media.autoplay = true;
