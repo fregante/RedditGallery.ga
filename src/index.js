@@ -37,7 +37,7 @@ function findMedia(response) {
 	const comments = dotFinder(response, '*.data.children.*.data');
 
 	for (const comment of comments) {
-		const urls = parseUrls(comment.body).filter(isWhitelisted);
+		const urls = parseUrls(comment.body || comment.url).filter(isWhitelisted);
 		for (const url of new Set(urls)) {
 			fetchAlbum(url).then(urls => urls.map(url => appendMedium({
 				isVideo: url.endsWith('.gifv'),
