@@ -40,7 +40,7 @@ function findMedia(response) {
 		const urls = parseUrls(comment.body || comment.url).filter(isWhitelisted);
 		for (const url of new Set(urls)) {
 			fetchAlbum(url).then(urls => urls.map(url => appendMedium({
-				isVideo: url.endsWith('.gifv'),
+				isVideo: /\.(gifv|mp4|webm)$/.test(url),
 				comment: `https://www.reddit.com/comments/${opId}/_/${comment.id}`,
 				media: cleanUrl(url)
 			})));
@@ -72,7 +72,7 @@ function matchAll(str, regex) {
 }
 
 function isWhitelisted(url) {
-	const is = /imgur.com|redd.it|gfycat.com/.test(url);
+	const is = /imgur.com|redd.it|gfycat.com|\.png$|\.gif$|\.jpe?g|\.mp4|\.webm$/.test(url);
 	console.log('URL found:', url, is ? '✅' : '❌');
 	return is;
 }
