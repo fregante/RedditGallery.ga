@@ -127,7 +127,6 @@ function fetchPost(id) {
 }
 
 function populate(comments) {
-	console.info(comments)
 	const content = document.querySelector('.content');
 	comments.forEach(comment => {
 		new Set(comment.images).forEach(url => {
