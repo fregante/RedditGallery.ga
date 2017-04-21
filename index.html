@@ -19,6 +19,7 @@
 		border: solid 1px #ccc;
 		padding: 0.3em;
 	}
+	video,
 	img {
 		max-width: 100%;
 		max-height: 90vh;
@@ -26,10 +27,12 @@
 		margin: 10px auto;
 	}
 </style>
-<h1>One-thread Gallery for Reddit</h1>
-<div class="content"></div>
-<form action="." method="get">
-	<input type="text" name="url" autocomplete="off" placeholder="Paste a Reddit post URL">
-</form>
-<script src="index.js"></script>
+<body>
+	<h1>One-thread Gallery for Reddit</h1>
+	<div class="content"></div>
+	<form action="." method="get">
+		<input type="text" name="url" autocomplete="off" placeholder="Paste a Reddit post URL">
+	</form>
+	<script src="index.js"></script>
+</body>
 </html>

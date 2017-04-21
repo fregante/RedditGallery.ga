@@ -1,4 +1,22 @@
-const urlRegex = /(https?|ftp):\/\/[^\s/$.?#].[^\s\])]*/i;
+const urlRegex = /(https?|ftp):\/\/[^\s/$.?#].[^\s\])]*/gi;
+
+function parseUrls(body) {
+	return matchAll(body, urlRegex).map(matches => matches[0]);
+}
+
+function matchAll(str, regex) {
+	const res = [];
+	let m;
+	while (m = regex.exec(str)) {
+		res.push(m);
+	}
+	return res;
+}
+
+function thenLog(p) {
+	console.log(p);
+	return p;
+}
 
 function init() {
 	const deepLink = new URL(location).searchParams.get('url');
@@ -40,6 +58,48 @@ function flatten(arr) {
 	}, []);
 }
 
+function isWhitelisted(url) {
+	const is = /imgur.com|redd.it|gfycat.com/.test(url);
+	console.log('URL found:', url, is ? '✅' : '❌')
+	return is;
+}
+
+function getUrlsMap(r) {
+	const opId = r[0].data.children[0].data.id;
+
+	return r[1].data.children
+	.map(c => {
+		const urls = parseUrls(c.data.body).filter(isWhitelisted);
+		return urls.length === 0 ? null : {
+			comment: `https://www.reddit.com/comments/${opId}/_/${c.data.id}`,
+			images: urls
+		};
+	})
+	.filter(identity);
+}
+
+function identity(a) {
+	return a;
+}
+
+function parseAlbums(posts) {
+	return posts.map(p => {
+		const albums = p.images.map(fetchAlbum);
+		return Promise.all(albums).then(urls => {
+			p.images = cleanUrls(flatten(urls.filter(identity)));
+			// console.log(p.comment, p.images, albums);
+			return p;
+		}, err => console.error(err));
+	});
+}
+
+function cleanUrls(urls) {
+	return urls
+		.map(url => /gfycat/.test(url) ? url.replace(/https?:\/\/gfycat/, 'https://giant.gfycat') + '.gif' : url)
+		.map(url => url.replace(/https?:\/\/([im].)?imgur/, 'https://i.imgur'))
+		.map(url => /\/[^.]+$/.test(url) ? url + '.jpg' : url);
+}
+
 function fetchAlbum(url) {
 	const [,, album] = url.match(/\/(a|gallery)\/([^.]+)/) || [];
 	if (!album) {
@@ -50,7 +110,8 @@ function fetchAlbum(url) {
 		mode: 'cors'
 	})
 	.then(r => r.json())
-	.then(r => r.data.map(i => i.link));
+	.then(r => r.data.map(i => i.link))
+	.catch(err => null);
 }
 
 function fetchPost(id) {
@@ -58,30 +119,22 @@ function fetchPost(id) {
 		mode: 'cors'
 	})
 	.then(r => r.json())
-	.then(r =>
-		r[1].data.children
-		.map(c => c.data.body)
-		.filter(a => a)
-		.map(b => b.match(urlRegex))
-		.filter(a => a)
-		.map(url => url[0])
-	)
-	.then(urls => urls.map(fetchAlbum))
-	.then(mixed => Promise.all(mixed))
-	.then(flatten)
-	.then(urls => urls
-		.map(url => /gfycat/.test(url) ? url.replace(/https?:\/\/gfycat/, 'https://giant.gfycat') + '.gif' : url)
-		.map(url => url.replace(/https?:\/\/([im].)?imgur/, 'https://i.imgur'))
-		.map(url => /\/[^.]+$/.test(url) ? url + '.jpg' : url)
-	);
+	.then(thenLog)
+	.then(getUrlsMap)
+	.then(thenLog)
+	.then(parseAlbums)
+	.then(p => Promise.all(p));
 }
 
-function populate(urls) {
+function populate(comments) {
+	console.info(comments)
 	const content = document.querySelector('.content');
-	urls.forEach(url => {
-		const img = new Image();
-		img.src = url;
-		content.appendChild(img);
+	comments.forEach(comment => {
+		comment.images.forEach(url => {
+			const img = new Image();
+			img.src = url;
+			content.appendChild(img);
+		});
 	});
 }
 
