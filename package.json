@@ -1,5 +1,6 @@
 {
   "name": "redditpost.ga",
+  "private": true,
   "description": "RES makes it easy to show all images in comments, but I hate it that I cannot share all the images at once.",
   "version": "1.0.0",
   "main": "index.html",

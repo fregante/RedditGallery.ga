@@ -1,4 +1,7 @@
-# [redditpost.ga](https://redditpost.ga)
+# [redditpost.ga](https://redditpost.ga) [![Travis build status][badge-travis]][link-travis]
+
+  [badge-travis]: https://api.travis-ci.org/bfred-it/redditpost.ga.svg
+  [link-travis]: https://travis-ci.org/bfred-it/redditpost.ga
 
 RES makes it easy to show all images in comments, but I hate it that I cannot share all the images at once.
 
