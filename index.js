@@ -1,25 +1,26 @@
 const urlRegex = /(https?|ftp):\/\/[^\s/$.?#].[^\s\])]*/i;
 
-
-function init () {
-	const deepLink = new URL(location).searchParams.get('url');	
-	if(deepLink) {
+function init() {
+	const deepLink = new URL(location).searchParams.get('url');
+	if (deepLink) {
 		handleUrl(deepLink);
 	}
-	
+
 	document.querySelector('form').addEventListener('submit', e => {
 		const url = document.querySelector('[name=url]').value;
-		if(!handleUrl(url)) {
-			alert('The post ID was not recognized: ' + url)
+		if (!handleUrl(url)) {
+			alert('The post ID was not recognized: ' + url);
 		}
 		e.preventDefault();
 	});
 }
+
 function updateTitle(title) {
 	document.querySelector('h1').textContent = title;
 }
+
 function handleUrl(url) {
-	const [, id1, id2] = url.match(/comments\/(\w+)|^(\w+)$/) || []
+	const [, id1, id2] = url.match(/comments\/(\w+)|^(\w+)$/) || [];
 	const id = id1 || id2;
 	if (id) {
 		[...document.querySelectorAll('img')].forEach(img => img.remove());
@@ -29,35 +30,35 @@ function handleUrl(url) {
 			() => updateTitle(`Showing images for post ${id}`),
 			() => updateTitle(`Loading of post ${id} failed`)
 		);
-		
-	} else {
-		return false;
 	}
+	return false;
 }
 
 function flatten(arr) {
-  return arr.reduce(function (flat, toFlatten) {
-    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-  }, []);
+	return arr.reduce((flat, toFlatten) => {
+		return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+	}, []);
 }
+
 function fetchAlbum(url) {
-	const [,, album] = url.match(/\/(a|gallery)\/([^.]+)/) || []
+	const [,, album] = url.match(/\/(a|gallery)\/([^.]+)/) || [];
 	if (!album) {
 		return url;
 	}
 	return fetch(`https://api.imgur.com/3/album/${album}/images`, {
-		headers: new Headers(JSON.parse(atob('eyJBdXRob3JpemF0aW9uIjoiQ2xpZW50LUlEIDFhY2M4ZDFiMjk4YzZiYyJ9'))), // just unSEO
+		headers: new Headers(JSON.parse(atob('eyJBdXRob3JpemF0aW9uIjoiQ2xpZW50LUlEIDFhY2M4ZDFiMjk4YzZiYyJ9'))), // Just unSEO
 		mode: 'cors'
 	})
 	.then(r => r.json())
 	.then(r => r.data.map(i => i.link));
 }
+
 function fetchPost(id) {
 	return fetch(`https://www.reddit.com/comments/${id}.json`, {
 		mode: 'cors'
 	})
 	.then(r => r.json())
-	.then(r => 
+	.then(r =>
 		r[1].data.children
 		.map(c => c.data.body)
 		.filter(a => a)
@@ -72,8 +73,9 @@ function fetchPost(id) {
 		.map(url => /gfycat/.test(url) ? url.replace(/https?:\/\/gfycat/, 'https://giant.gfycat') + '.gif' : url)
 		.map(url => url.replace(/https?:\/\/([im].)?imgur/, 'https://i.imgur'))
 		.map(url => /\/[^.]+$/.test(url) ? url + '.jpg' : url)
-	)
+	);
 }
+
 function populate(urls) {
 	const content = document.querySelector('.content');
 	urls.forEach(url => {
@@ -82,6 +84,5 @@ function populate(urls) {
 		content.appendChild(img);
 	});
 }
-
 
 init();
