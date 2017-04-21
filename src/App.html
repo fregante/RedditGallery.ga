@@ -1,11 +1,11 @@
 <h1>{{ title }}</h1>
 <div class="content">
 	{{#each media as item}}
-		<a href="{{item.url}}" target="_blank">
+		<a href="{{item.comment}}" target="_blank">
 			{{#if item.isVideo}}
-				<video src="{{item.src}}" autoplay></video>
+				<video src="{{item.media}}" autoplay></video>
 			{{else}}
-				<img src="{{item.src}}" alt="">
+				<img src="{{item.media}}" alt="">
 			{{/if}}
 		</a>
 	{{/each}}

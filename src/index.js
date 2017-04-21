@@ -1,3 +1,4 @@
+import dotFinder from 'dot-finder';
 import App from './App.html';
 
 const app = new App({
@@ -20,33 +21,37 @@ app.observe('url', url => {
 	app.set({media: []});
 	app.set({title: `Loading post ${id}...`});
 	history.replaceState(history.state, document.title, `/?url=${id}`);
-	return fetchPost(id).then(populate).then(
-		() => app.set({title: `Showing images for post ${id}`}),
-		() => app.set({title: `Loading of post ${id} failed`})
-	);
+	return fetchPost(id)
+		.then(findMedia)
+		.then(
+			() => app.set({title: `Showing images for post ${id}`}),
+			() => app.set({title: `Loading of post ${id} failed`})
+		);
 });
 
-function getUrlsMap(r) {
-	const opId = r[0].data.children[0].data.id;
+function findMedia(response) {
+	const opId = response[0].data.children[0].data.id;
+	const comments = dotFinder(response, '*.data.children.*.data');
 
-	return r[1].data.children
-	.map(c => {
-		const urls = parseUrls(c.data.body).filter(isWhitelisted);
-		return urls.length === 0 ? null : {
-			comment: `https://www.reddit.com/comments/${opId}/_/${c.data.id}`,
-			images: urls
-		};
-	})
-	.filter(identity);
+	for (const comment of comments) {
+		const urls = parseUrls(comment.body).filter(isWhitelisted);
+		for (const url of new Set(urls)) {
+			fetchAlbum(url).then(urls => urls.map(url => appendMedium({
+				isVideo: url.endsWith('.gifv'),
+				comment: `https://www.reddit.com/comments/${opId}/_/${comment.id}`,
+				media: cleanUrl(url)
+			})));
+		}
+	}
 }
 
-
-
-
-
-
-
-
+function appendMedium(medium) {
+	const media = app.get('media');
+	media.push(medium);
+	app.set({
+		media
+	});
+}
 
 const urlRegex = /(https?|ftp):\/\/[^\s/$.?#].[^\s\])]*/gi;
 
@@ -63,49 +68,26 @@ function matchAll(str, regex) {
 	return res;
 }
 
-function thenLog(p) {
-	console.log(p);
-	return p;
-}
-
-function flatten(arr) {
-	return arr.reduce((flat, toFlatten) => {
-		return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-	}, []);
-}
-
 function isWhitelisted(url) {
 	const is = /imgur.com|redd.it|gfycat.com/.test(url);
 	console.log('URL found:', url, is ? '✅' : '❌');
 	return is;
 }
 
-function identity(a) {
-	return a;
-}
-
-function parseAlbums(posts) {
-	return posts.map(p => {
-		const albums = p.images.map(fetchAlbum);
-		return Promise.all(albums).then(urls => {
-			p.images = cleanUrls(flatten(urls.filter(identity)));
-			// Console.log(p.comment, p.images, albums);
-			return p;
-		}, err => console.error(err));
-	});
-}
-
-function cleanUrls(urls) {
-	return urls
-		.map(url => /gfycat/.test(url) ? url.replace(/https?:\/\/gfycat/, 'https://giant.gfycat') + '.gif' : url)
-		.map(url => url.replace(/https?:\/\/([im].)?imgur/, 'https://i.imgur'))
-		.map(url => /\/[^.]+$/.test(url) ? url + '.jpg' : url);
+function cleanUrl(url) {
+	if (/gfycat/.test(url)) {
+		return url.replace(/https?:\/\/gfycat/, 'https://giant.gfycat') + '.gif';
+	}
+	url = url.replace(/https?:\/\/([im].)?imgur/, 'https://i.imgur');
+	url = /\/[^.]+$/.test(url) ? url + '.jpg' : url;
+	url = url.replace(/\.gifv$/, '.mp4');
+	return url;
 }
 
 function fetchAlbum(url) {
 	const [,, album] = url.match(/\/(a|gallery)\/([^.]+)/) || [];
 	if (!album) {
-		return url;
+		return Promise.resolve([url]);
 	}
 	return fetch(`https://api.imgur.com/3/album/${album}/images`, {
 		headers: new Headers(JSON.parse(atob('eyJBdXRob3JpemF0aW9uIjoiQ2xpZW50LUlEIDFhY2M4ZDFiMjk4YzZiYyJ9'))), // Just unSEO
@@ -120,27 +102,5 @@ function fetchPost(id) {
 	return fetch(`https://www.reddit.com/comments/${id}.json`, {
 		mode: 'cors'
 	})
-	.then(r => r.json())
-	.then(thenLog)
-	.then(getUrlsMap)
-	.then(thenLog)
-	.then(parseAlbums)
-	.then(p => Promise.all(p));
-}
-
-function populate(comments) {
-	comments.forEach(comment => {
-		new Set(comment.images).forEach(url => {
-			const medium = {
-				isVideo: /\.gifv$/.test(url),
-				url: comment.comment,
-				src: url.replace(/\.gifv$/, '.mp4')
-			};
-			const media = app.get('media');
-			media.push(medium);
-			app.set({
-				media
-			});
-		});
-	});
+	.then(r => r.json());
 }
