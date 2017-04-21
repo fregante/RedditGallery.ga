@@ -1,0 +1,35 @@
+<h1>{{ title }}</h1>
+<div class="content">
+	{{#each media as item}}
+		<a href="{{item.url}}" target="_blank">
+			{{#if item.isVideo}}
+				<video src="{{item.src}}" autoplay></video>
+			{{else}}
+				<img src="{{item.src}}" alt="">
+			{{/if}}
+		</a>
+	{{/each}}
+</div>
+<form action="." method="get" on:submit="handleSubmit(event)">
+	<input type="text" name="url" autocomplete="off" placeholder="Paste a Reddit post URL" bind:value="input">
+</form>
+<script>
+	export default {
+		data() {
+			return {
+				title: 'One-thread Gallery for Reddit',
+				url: '',
+				input: '',
+				media: []
+			};
+		},
+		methods: {
+			handleSubmit(event) {
+				event.preventDefault();
+				this.set({
+					url: this.get('input')
+				});
+			}
+		}
+	};
+</script>

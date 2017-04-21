@@ -1,3 +1,18 @@
+import App from './App.html';
+
+const app = new App({
+	target: document.body,
+	data: {
+		url: new URL(location).searchParams.get('url')
+	}
+});
+
+app.observe('url', url => {
+	if (url && !handleUrl(url)) {
+		alert('The post ID was not recognized: ' + url);
+	}
+});
+
 const urlRegex = /(https?|ftp):\/\/[^\s/$.?#].[^\s\])]*/gi;
 
 function parseUrls(body) {
@@ -18,35 +33,16 @@ function thenLog(p) {
 	return p;
 }
 
-function init() {
-	const deepLink = new URL(location).searchParams.get('url');
-	if (deepLink) {
-		handleUrl(deepLink);
-	}
-
-	document.querySelector('form').addEventListener('submit', e => {
-		const url = document.querySelector('[name=url]').value;
-		if (!handleUrl(url)) {
-			alert('The post ID was not recognized: ' + url);
-		}
-		e.preventDefault();
-	});
-}
-
-function updateTitle(title) {
-	document.querySelector('h1').textContent = title;
-}
-
 function handleUrl(url) {
 	const [, id1, id2] = url.match(/comments\/(\w+)|^(\w+)$/) || [];
 	const id = id1 || id2;
 	if (id) {
-		[...document.querySelectorAll('img,video')].forEach(el => el.remove());
-		updateTitle(`Loading post ${id}...`);
+		app.set({media: []});
+		app.set({title: `Loading post ${id}...`});
 		history.replaceState(history.state, document.title, `/?url=${id}`);
 		return fetchPost(id).then(populate).then(
-			() => updateTitle(`Showing images for post ${id}`),
-			() => updateTitle(`Loading of post ${id} failed`)
+			() => app.set({title: `Showing images for post ${id}`}),
+			() => app.set({title: `Loading of post ${id} failed`})
 		);
 	}
 	return false;
@@ -60,7 +56,7 @@ function flatten(arr) {
 
 function isWhitelisted(url) {
 	const is = /imgur.com|redd.it|gfycat.com/.test(url);
-	console.log('URL found:', url, is ? '✅' : '❌')
+	console.log('URL found:', url, is ? '✅' : '❌');
 	return is;
 }
 
@@ -87,7 +83,7 @@ function parseAlbums(posts) {
 		const albums = p.images.map(fetchAlbum);
 		return Promise.all(albums).then(urls => {
 			p.images = cleanUrls(flatten(urls.filter(identity)));
-			// console.log(p.comment, p.images, albums);
+			// Console.log(p.comment, p.images, albums);
 			return p;
 		}, err => console.error(err));
 	});
@@ -127,19 +123,18 @@ function fetchPost(id) {
 }
 
 function populate(comments) {
-	const content = document.querySelector('.content');
 	comments.forEach(comment => {
 		new Set(comment.images).forEach(url => {
-			const media = document.createElement(/\.gifv$/.test(url) ? 'video' : 'img');
-			media.src = url.replace(/\.gifv$/, '.mp4');
-			media.autoplay = true;
-			const a = document.createElement('a');
-			a.href = comment.comment;
-			a.target = '_blank';
-			a.appendChild(media);
-			content.appendChild(a);
+			const medium = {
+				isVideo: /\.gifv$/.test(url),
+				url: comment.comment,
+				src: url.replace(/\.gifv$/, '.mp4')
+			};
+			const media = app.get('media');
+			media.push(medium);
+			app.set({
+				media
+			});
 		});
 	});
 }
-
-init();
