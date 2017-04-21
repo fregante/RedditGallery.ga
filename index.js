@@ -136,6 +136,7 @@ function populate(comments) {
 			media.autoplay = true;
 			const a = document.createElement('a');
 			a.href = comment.comment;
+			a.target = '_blank';
 			a.appendChild(media);
 			content.appendChild(a);
 		});
