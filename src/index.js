@@ -8,10 +8,45 @@ const app = new App({
 });
 
 app.observe('url', url => {
-	if (url && !handleUrl(url)) {
-		alert('The post ID was not recognized: ' + url);
+	if (!url) {
+		return;
 	}
+	const [, id1, id2] = url.match(/comments\/(\w+)|^(\w+)$/) || [];
+	const id = id1 || id2;
+	if (!id) {
+		alert('The post ID was not recognized: ' + url);
+		return;
+	}
+	app.set({media: []});
+	app.set({title: `Loading post ${id}...`});
+	history.replaceState(history.state, document.title, `/?url=${id}`);
+	return fetchPost(id).then(populate).then(
+		() => app.set({title: `Showing images for post ${id}`}),
+		() => app.set({title: `Loading of post ${id} failed`})
+	);
 });
+
+function getUrlsMap(r) {
+	const opId = r[0].data.children[0].data.id;
+
+	return r[1].data.children
+	.map(c => {
+		const urls = parseUrls(c.data.body).filter(isWhitelisted);
+		return urls.length === 0 ? null : {
+			comment: `https://www.reddit.com/comments/${opId}/_/${c.data.id}`,
+			images: urls
+		};
+	})
+	.filter(identity);
+}
+
+
+
+
+
+
+
+
 
 const urlRegex = /(https?|ftp):\/\/[^\s/$.?#].[^\s\])]*/gi;
 
@@ -33,21 +68,6 @@ function thenLog(p) {
 	return p;
 }
 
-function handleUrl(url) {
-	const [, id1, id2] = url.match(/comments\/(\w+)|^(\w+)$/) || [];
-	const id = id1 || id2;
-	if (id) {
-		app.set({media: []});
-		app.set({title: `Loading post ${id}...`});
-		history.replaceState(history.state, document.title, `/?url=${id}`);
-		return fetchPost(id).then(populate).then(
-			() => app.set({title: `Showing images for post ${id}`}),
-			() => app.set({title: `Loading of post ${id} failed`})
-		);
-	}
-	return false;
-}
-
 function flatten(arr) {
 	return arr.reduce((flat, toFlatten) => {
 		return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
@@ -58,20 +78,6 @@ function isWhitelisted(url) {
 	const is = /imgur.com|redd.it|gfycat.com/.test(url);
 	console.log('URL found:', url, is ? '✅' : '❌');
 	return is;
-}
-
-function getUrlsMap(r) {
-	const opId = r[0].data.children[0].data.id;
-
-	return r[1].data.children
-	.map(c => {
-		const urls = parseUrls(c.data.body).filter(isWhitelisted);
-		return urls.length === 0 ? null : {
-			comment: `https://www.reddit.com/comments/${opId}/_/${c.data.id}`,
-			images: urls
-		};
-	})
-	.filter(identity);
 }
 
 function identity(a) {
