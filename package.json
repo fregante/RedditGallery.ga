@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "main": "index.html",
   "devDependencies": {
+    "babili": "^0.0.12",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-svelte": "^1.8.0",
@@ -21,8 +22,8 @@
   },
   "scripts": {
     "test": "npm run build",
-    "build": "rollup -c",
-    "watch": "rollup -c -w"
+    "build": "rollup -c | babili > dist/index.js",
+    "watch": "rollup -c -w -o dist/index.js"
   },
   "repository": {
     "type": "git",
