@@ -1,18 +1,15 @@
-<h1>RedditPost.ga</h1>
 {{#if status}}
 	<p>{{{ status }}}</p>
 {{/if}}
-<div class="content">
-	{{#each media as item}}
-		<a href="{{item.comment}}" target="_blank">
-			{{#if item.isVideo}}
-				<video src="{{item.media}}" autoplay controls loop muted></video>
-			{{else}}
-				<img src="{{item.media}}" alt="">
-			{{/if}}
-		</a>
-	{{/each}}
-</div>
+{{#each media as item}}
+	<a href="{{item.comment}}" target="_blank">
+		{{#if item.isVideo}}
+			<video src="{{item.media}}" autoplay controls loop muted></video>
+		{{else}}
+			<img src="{{item.media}}" alt="">
+		{{/if}}
+	</a>
+{{/each}}
 <form action="." method="get" on:submit="handleSubmit(event)">
 	<input type="text" name="url" autocomplete="off" placeholder="Paste a Reddit post URL" bind:value="input">
 </form>

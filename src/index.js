@@ -2,7 +2,7 @@ import dotFinder from 'dot-finder';
 import App from './App.html';
 
 const app = new App({
-	target: document.body,
+	target: document.querySelector('main'),
 	data: {
 		url: new URL(location).searchParams.get('url')
 	}
