@@ -12,24 +12,27 @@ app.observe('url', url => {
 	if (!url) {
 		return;
 	}
+	app.set({media: []});
 	const [, id1, id2] = url.match(/comments\/(\w+)|^(\w+)$/) || [];
 	const id = id1 || id2;
 	if (!id) {
-		alert('The post ID was not recognized: ' + url);
+		app.set({state: `input-error`});
 		return;
 	}
-	app.set({media: []});
-	app.set({title: `Loading post ${id}...`});
+	app.set({id});
+	app.set({state: 'loading'});
 	history.replaceState(history.state, document.title, `/?url=${id}`);
-	return fetchPost(id)
+
+	fetchPost(id)
 		.then(findMedia)
 		.then(
-			() => app.set({title: `Showing images for post ${id}`}),
-			() => app.set({title: `Loading of post ${id} failed`})
+			() => app.set({state: `done`}),
+			() => app.set({state: `error`})
 		);
 });
 
 function findMedia(response) {
+	console.info('Raw JSON', response);
 	const opId = response[0].data.children[0].data.id;
 	const comments = dotFinder(response, '*.data.children.*.data');
 
