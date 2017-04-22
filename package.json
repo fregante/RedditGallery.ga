@@ -1,5 +1,5 @@
 {
-  "name": "redditpost.ga",
+  "name": "regallery.ga",
   "private": true,
   "description": "RES makes it easy to show all images in comments, but I hate it that I cannot share all the images at once.",
   "version": "1.0.0",
@@ -29,12 +29,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bfred-it/redditpost.ga.git"
+    "url": "git+https://github.com/bfred-it/regallery.ga.git"
   },
   "author": "Federico Brigante <npm@bfred.it> (https://twitter.com/bfred_it)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bfred-it/redditpost.ga/issues"
+    "url": "https://github.com/bfred-it/regallery.ga/issues"
   },
-  "homepage": "https://github.com/bfred-it/redditpost.ga#readme"
+  "homepage": "https://github.com/bfred-it/regallery.ga#readme"
 }
