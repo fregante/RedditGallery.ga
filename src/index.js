@@ -34,18 +34,16 @@ app.observe('url', url => {
 function findMedia(response) {
 	console.info('Raw JSON', response);
 	const opId = response[0].data.children[0].data.id;
-	const comments = dotFinder(response, '*.data.children.*.data');
-
-	for (const comment of comments) {
+	dotFinder(response, '*.data.children.*.data').forEach(comment => {
 		const urls = parseUrls(comment.body || comment.url).filter(isWhitelisted);
-		for (const url of new Set(urls)) {
+		new Set(urls).forEach(url => {
 			fetchAlbum(url).then(urls => urls.map(url => appendMedium({
 				isVideo: /\.(gifv|mp4|webm)$/.test(url),
 				comment: `https://www.reddit.com/comments/${opId}/_/${comment.id}`,
 				media: cleanUrl(url)
 			})));
-		}
-	}
+		});
+	});
 }
 
 function appendMedium(medium) {
