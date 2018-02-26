@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>One-thread Gallery for Reddit</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="dist.js" defer></script>
+<style>
+	body {
+		text-align: center;
+		font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+		margin: 0;
+		color: #001f3f;
+		font-weight: 200;
+	}
+	h1 {
+		font-size: 29px;
+		font-weight: 300;
+	}
+	footer {
+		font-size: 0.8em;
+		opacity: 0.8;
+	}
+	a {
+		display: inline-block;
+		vertical-align: middle;
+		color: #0074D9;
+	}
+	footer p {
+		max-width: 25em;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	input {
+		font: inherit;
+		font-size: 16px;
+		width: 14em;
+		border-radius: 0.2em;
+		border: solid 1px #ccc;
+		padding: 0.3em;
+	}
+	video,
+	img {
+		max-width: calc(100% - 10px);
+		max-height: 90vh;
+		display: block;
+		margin: 5px;
+	}
+</style>
+<body>
+	<h1>ReGallery.ga</h1>
+	<main></main>
+	<footer>
+		<p>ReGallery.ga will display all the images in the comments of a Reddit post. Excellent for sharing /r/PhotoshopBattles threads like <a href="/?url=5uyi9m">this one</a>.</p>
+		<p>Issues? <a href="https://github.com/bfred-it/regallery.ga/" target="_blank">GitHub</a> • Share it on <a href="https://twitter.com/home?status=Automatically%20generate%20a%20gallery%20of%20images%20from%20a%20Reddit%20post%20with%20this%20little%20webapp!%20https%3A%2F%2Fregallery.ga" target="_blank">Twitter</a></p>
+	</footer>
+</body>
+</html>

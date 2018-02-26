@@ -1,0 +1,10 @@
+language: node_js
+node_js: stable
+script: npm run build && ls
+deploy:
+  fqdn: regallery.ga
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  on:
+    branch: master
