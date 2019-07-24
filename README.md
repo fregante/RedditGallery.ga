@@ -1,7 +1,7 @@
 # [regallery.ga](https://regallery.ga) [![Travis build status][badge-travis]][link-travis]
 
-  [badge-travis]: https://api.travis-ci.org/bfred-it/regallery.ga.svg
-  [link-travis]: https://travis-ci.org/bfred-it/regallery.ga
+  [badge-travis]: https://api.travis-ci.org/fregante/regallery.ga.svg
+  [link-travis]: https://travis-ci.org/fregante/regallery.ga
 
 RES makes it easy to show all images in comments, but I hate it that I cannot share all the images at once.
 

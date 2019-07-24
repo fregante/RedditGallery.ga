@@ -1,9 +1,25 @@
 {
   "name": "regallery.ga",
+  "version": "1.0.0",
   "private": true,
   "description": "RES makes it easy to show all images in comments, but I hate it that I cannot share all the images at once.",
-  "version": "1.0.0",
+  "repository": "fregante/regallery.ga",
+  "license": "MIT",
+  "author": "Federico Brigante <opensource@bfred.it> (bfred.it)",
   "main": "index.html",
+  "scripts": {
+    "build": "rollup -c | buble | babili > dist.js",
+    "test": "npm run build",
+    "watch": "rollup -c -w -o dist.js"
+  },
+  "xo": {
+    "env": [
+      "browser"
+    ]
+  },
+  "dependencies": {
+    "dot-finder": "^0.0.1"
+  },
   "devDependencies": {
     "babili": "^0.0.12",
     "buble": "^0.15.2",
@@ -13,28 +29,5 @@
     "rollup-plugin-svelte": "^1.8.0",
     "rollup-watch": "^3.2.2",
     "xo": "^0.18.1"
-  },
-  "dependencies": {
-    "dot-finder": "^0.0.1"
-  },
-  "xo": {
-    "env": [
-      "browser"
-    ]
-  },
-  "scripts": {
-    "test": "npm run build",
-    "build": "rollup -c | buble | babili > dist.js",
-    "watch": "rollup -c -w -o dist.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bfred-it/regallery.ga.git"
-  },
-  "author": "Federico Brigante <npm@bfred.it> (https://twitter.com/bfred_it)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/bfred-it/regallery.ga/issues"
-  },
-  "homepage": "https://github.com/bfred-it/regallery.ga#readme"
+  }
 }
