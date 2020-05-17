@@ -1,9 +1,9 @@
 {
-  "name": "regallery.ga",
+  "name": "redditgallery.ga",
   "version": "1.0.0",
   "private": true,
   "description": "RES makes it easy to show all images in comments, but I hate it that I cannot share all the images at once.",
-  "repository": "fregante/regallery.ga",
+  "repository": "fregante/redditgallery.ga",
   "license": "MIT",
   "author": "Federico Brigante <opensource@bfred.it> (bfred.it)",
   "main": "index.html",
